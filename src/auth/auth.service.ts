@@ -3,28 +3,72 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
-import { User } from '../models/user.model';
+import {
+  UserRegistration,
+  NewUserWithToken,
+  UserLogin,
+} from '../models/user.model';
 
 @Injectable()
 export class AuthService {
-  private users: User[] = [];
+  private users: UserRegistration[] = [];
 
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<UserRegistration>,
+  ) {}
 
   saltOrRounds = 10;
+
+  async generateJwtToken(user: UserRegistration) {
+    const payload = { email: user.email, username: user.username };
+    const options = { expiresIn: '365d' };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, options);
+
+    return token;
+  }
 
   async hashPassword(password) {
     return bcrypt.hash(password, this.saltOrRounds);
   }
 
-  async registration(data: User) {
+  async registration(data: UserRegistration) {
     try {
       data.password = await this.hashPassword(data.password);
-      await this.userModel.create(data);
-      return data;
+      const newUser = (await this.userModel.create(data)) as NewUserWithToken;
+      const token = await this.generateJwtToken(newUser);
+
+      return { ...newUser._doc, token };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async login({ email, password }: UserLogin) {
+    const user = (await this.userModel.findOne({ email })) as NewUserWithToken;
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+
+    const token = await this.generateJwtToken(user);
+
+    return { ...user._doc, token };
+  }
+
+  async getUserById(email: string) {
+    const userInfo = (await this.userModel
+      .findOne({ email })
+      .exec()) as NewUserWithToken;
+    const { password, ...info } = userInfo._doc;
+    return info;
   }
 }

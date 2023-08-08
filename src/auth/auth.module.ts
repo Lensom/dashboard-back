@@ -1,12 +1,29 @@
-import { Module } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+} from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthController } from './auth.controller';
-import { UserSchema } from '../models/user.model';
+import { UserRegistrationSchema } from '../models/user.model';
 import { AuthService } from './auth.service';
+import { AuthMiddleware } from './auth.middleware';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserRegistrationSchema },
+    ]),
+  ],
   controllers: [AuthController],
   providers: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: 'user/get-info',
+      method: RequestMethod.GET,
+    });
+  }
+}
