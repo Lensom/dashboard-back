@@ -39,8 +39,9 @@ export class AuthService {
       data.password = await this.hashPassword(data.password);
       const newUser = (await this.userModel.create(data)) as NewUserWithToken;
       const token = await this.generateJwtToken(newUser);
+      const { password, ...info } = newUser._doc;
 
-      return { ...newUser._doc, token };
+      return { ...info, token };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -48,6 +49,7 @@ export class AuthService {
 
   async login({ email, password }: UserLogin) {
     const user = (await this.userModel.findOne({ email })) as NewUserWithToken;
+    const { password: pUser, ...info } = user._doc;
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -61,7 +63,7 @@ export class AuthService {
 
     const token = await this.generateJwtToken(user);
 
-    return { ...user._doc, token };
+    return { ...info, token };
   }
 
   async getUserById(email: string) {
