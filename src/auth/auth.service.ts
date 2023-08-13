@@ -70,6 +70,11 @@ export class AuthService {
     const userInfo = (await this.userModel
       .findOne({ email })
       .exec()) as NewUserWithToken;
+
+    if (!userInfo) {
+      throw new NotFoundException('User not found');
+    }
+
     const { password, ...info } = userInfo._doc;
     return info;
   }
