@@ -21,9 +21,19 @@ import { AuthMiddleware } from './auth.middleware';
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes({
-      path: 'user/get-info',
-      method: RequestMethod.GET,
-    });
+    consumer.apply(AuthMiddleware).forRoutes(
+      {
+        path: 'user/get-info',
+        method: RequestMethod.GET,
+      },
+      {
+        path: 'portfolio/add-stock',
+        method: RequestMethod.POST,
+      },
+      {
+        path: 'portfolio',
+        method: RequestMethod.GET,
+      },
+    );
   }
 }

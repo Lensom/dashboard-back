@@ -3,7 +3,7 @@ import { UserRegistration, UserLogin } from '../models/user.model';
 import { AuthService } from './auth.service';
 
 interface ExtendedRequest extends Request {
-  userEmail?: string;
+  userId?: string;
 }
 
 @Controller('user')
@@ -22,7 +22,7 @@ export class AuthController {
 
   @Get('get-info')
   getInfo(@Req() req: Request) {
-    const userEmail = (req as ExtendedRequest).userEmail;
-    return this.authService.getUserById(userEmail);
+    const userId = (req as ExtendedRequest).userId;
+    return this.authService.getUserById(userId);
   }
 }

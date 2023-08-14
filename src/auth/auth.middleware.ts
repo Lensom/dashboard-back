@@ -19,7 +19,7 @@ export class AuthMiddleware implements NestMiddleware {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-        req.userEmail = decoded.email;
+        req.userId = decoded.userId;
       } catch (e) {}
     } else {
       throw new HttpException("Don't have access", HttpStatus.FORBIDDEN);

@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -22,7 +26,11 @@ export class AuthService {
   saltOrRounds = 10;
 
   async generateJwtToken(user: UserRegistration) {
-    const payload = { email: user.email, username: user.username };
+    const payload = {
+      email: user.email,
+      username: user.username,
+      userId: user._id,
+    };
     const options = { expiresIn: '365d' };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, options);
@@ -66,9 +74,9 @@ export class AuthService {
     return { ...info, token };
   }
 
-  async getUserById(email: string) {
+  async getUserById(userId: string) {
     const userInfo = (await this.userModel
-      .findOne({ email })
+      .findById({ _id: userId })
       .exec()) as NewUserWithToken;
 
     if (!userInfo) {
