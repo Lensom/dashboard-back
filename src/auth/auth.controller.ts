@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, Req } from '@nestjs/common';
-import { UserRegistration, UserLogin } from '../models/user.model';
+import { UserRegistration, UserLogin } from './auth.model';
 import { AuthService } from './auth.service';
 
 interface ExtendedRequest extends Request {

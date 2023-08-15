@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthController } from './auth.controller';
-import { UserRegistrationSchema } from '../models/user.model';
+import { UserRegistrationSchema } from './auth.model';
 import { AuthService } from './auth.service';
 import { AuthMiddleware } from './auth.middleware';
 

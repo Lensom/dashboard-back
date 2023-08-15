@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Portfolio } from '../models/portfolio.model';
+import { Portfolio } from './portfolio.model';
 
 @Injectable()
 export class PortfolioService {

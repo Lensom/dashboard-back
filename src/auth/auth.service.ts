@@ -9,11 +9,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
-import {
-  UserRegistration,
-  NewUserWithToken,
-  UserLogin,
-} from '../models/user.model';
+import { UserRegistration, NewUserWithToken, UserLogin } from './auth.model';
 
 @Injectable()
 export class AuthService {
