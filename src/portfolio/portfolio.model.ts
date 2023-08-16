@@ -18,9 +18,6 @@ export class Portfolio extends Document {
 
   @Prop({ required: true })
   userId: string;
-
-  @Prop()
-  count: 0;
 }
 
 export const PortfolioSchema = SchemaFactory.createForClass(Portfolio);
