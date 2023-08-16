@@ -34,25 +34,28 @@ export class PortfolioService {
       const portfolio = await this.portfolioModel.find({ userId }).exec();
 
       const filteredPortfolio = portfolio.map(({ ticker, buyHistory }) => {
-        const count = buyHistory.reduce(
-          (acc, currentItem) => acc + currentItem.count,
-          0,
+        const { totalCost, totalShares } = buyHistory.reduce(
+          (accumulator, purchase) => {
+            const count = purchase.count;
+            const price = parseFloat(purchase.price);
+
+            accumulator.totalCost += count * price;
+            accumulator.totalShares += count;
+
+            return accumulator;
+          },
+          { totalCost: 0, totalShares: 0 },
         );
 
-        const totalPrice =
-          buyHistory.reduce(
-            (acc, currentItem) => acc + Number(currentItem.price),
-            0,
-          ) / count;
-
-        const profitLossUsd = null;
+        const avgPrice = Number((totalCost / totalShares).toFixed(2));
 
         return {
           ticker,
           buyHistory,
-          count,
-          totalPrice,
-          profitLossUsd,
+          totalShares,
+          avgPrice,
+          totalCost,
+          currentCost: (avgPrice * totalShares).toFixed(2),
         };
       });
 
@@ -67,9 +70,20 @@ export class PortfolioService {
           (info) => info.symbol === portfolio.ticker,
         );
 
+        const profitLossProcent =
+          ((infoObj.regularMarketPrice - portfolio.avgPrice) /
+            portfolio.avgPrice) *
+          100;
+
+        const profitLossUsd =
+          (infoObj.regularMarketPrice - portfolio.avgPrice) *
+          portfolio.totalShares;
+
         const choosedInfo = {
           name: infoObj.shortName,
           currentPrice: infoObj.regularMarketPrice,
+          profitLossUsd: profitLossUsd.toFixed(2),
+          profitLossProcent: profitLossProcent.toFixed(2),
         };
 
         return {
