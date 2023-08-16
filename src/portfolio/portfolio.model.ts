@@ -14,10 +14,13 @@ export class Portfolio extends Document {
     type: [{ count: Number, date: String, price: String }],
     required: true,
   })
-  stocks: Array<{ count: number; data: string; price: string }>;
+  buyHistory: Array<{ count: number; date: string; price: string }>;
 
   @Prop({ required: true })
   userId: string;
+
+  @Prop()
+  count: 0;
 }
 
 export const PortfolioSchema = SchemaFactory.createForClass(Portfolio);
