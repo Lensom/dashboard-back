@@ -55,7 +55,6 @@ export class PortfolioService {
           totalShares,
           avgPrice,
           totalCost,
-          currentCost: (avgPrice * totalShares).toFixed(2),
         };
       });
 
@@ -82,8 +81,11 @@ export class PortfolioService {
         const choosedInfo = {
           name: infoObj.shortName,
           currentPrice: infoObj.regularMarketPrice,
-          profitLossUsd: profitLossUsd.toFixed(2),
-          profitLossProcent: profitLossProcent.toFixed(2),
+          profitLossUsd: Number(profitLossUsd.toFixed(2)),
+          profitLossProcent: Number(profitLossProcent.toFixed(2)),
+          currentCost: Number(
+            (infoObj.regularMarketPrice * portfolio.totalShares).toFixed(2),
+          ),
         };
 
         return {
