@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Req,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from 'src/portfolio/portfolio.model';
 
@@ -24,5 +32,14 @@ export class PortfolioController {
   fetchPortfolio(@Req() request: ExtendedRequest) {
     const userId = request.userId;
     return this.portfolioService.fetchPortfolio(userId);
+  }
+
+  @Delete(':symbol')
+  deleteStock(
+    @Param('symbol') symbol: string,
+    @Req() request: ExtendedRequest,
+  ): Promise<any> {
+    const userId = request.userId;
+    return this.portfolioService.deleteStock(symbol, userId);
   }
 }

@@ -34,6 +34,10 @@ export class AuthModule implements NestModule {
         path: 'portfolio',
         method: RequestMethod.GET,
       },
+      {
+        path: 'portfolio/:symbol',
+        method: RequestMethod.DELETE,
+      },
     );
   }
 }

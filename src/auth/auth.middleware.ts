@@ -24,6 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
     } else {
       throw new HttpException("Don't have access", HttpStatus.FORBIDDEN);
     }
+
     next();
   }
 }

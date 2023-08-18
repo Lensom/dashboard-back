@@ -99,4 +99,13 @@ export class PortfolioService {
       throw new NotFoundException('Portfolio not found');
     }
   }
+
+  async deleteStock(ticker: string, userId: string): Promise<any> {
+    try {
+      await this.portfolioModel.findOneAndDelete({ userId, ticker });
+      return this.fetchPortfolio(userId);
+    } catch (err) {
+      throw new NotFoundException('Portfolio not found');
+    }
+  }
 }
