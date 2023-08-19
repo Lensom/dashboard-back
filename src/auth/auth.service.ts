@@ -53,11 +53,12 @@ export class AuthService {
 
   async login({ email, password }: UserLogin) {
     const user = (await this.userModel.findOne({ email })) as NewUserWithToken;
-    const { password: pUser, ...info } = user._doc;
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    const { password: pUser, ...info } = user._doc;
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
