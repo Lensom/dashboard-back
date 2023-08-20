@@ -33,6 +33,10 @@ export class PortfolioService {
     try {
       const portfolio = await this.portfolioModel.find({ userId }).exec();
 
+      if (!portfolio.length) {
+        return [];
+      }
+
       const filteredPortfolio = portfolio.map(({ ticker, purchaseHistory }) => {
         const { totalCost, totalShares } = purchaseHistory.reduce(
           (accumulator, purchase) => {
