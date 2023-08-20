@@ -14,7 +14,7 @@ export class Portfolio extends Document {
     type: [{ count: Number, date: String, price: String }],
     required: true,
   })
-  buyHistory: Array<{ count: number; date: string; price: string }>;
+  purchaseHistory: Array<{ count: number; date: string; price: string }>;
 
   @Prop({ required: true })
   userId: string;

@@ -33,8 +33,8 @@ export class PortfolioService {
     try {
       const portfolio = await this.portfolioModel.find({ userId }).exec();
 
-      const filteredPortfolio = portfolio.map(({ ticker, buyHistory }) => {
-        const { totalCost, totalShares } = buyHistory.reduce(
+      const filteredPortfolio = portfolio.map(({ ticker, purchaseHistory }) => {
+        const { totalCost, totalShares } = purchaseHistory.reduce(
           (accumulator, purchase) => {
             const count = purchase.count;
             const price = parseFloat(purchase.price);
@@ -51,7 +51,7 @@ export class PortfolioService {
 
         return {
           ticker,
-          buyHistory,
+          purchaseHistory,
           totalShares,
           avgPrice,
           totalCost,
