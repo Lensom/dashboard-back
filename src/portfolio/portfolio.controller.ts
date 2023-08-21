@@ -42,4 +42,14 @@ export class PortfolioController {
     const userId = request.userId;
     return this.portfolioService.deleteStock(symbol, userId);
   }
+
+  @Post('edit-stock')
+  editStockToPortfolio(
+    @Body() stock: Portfolio,
+    @Req() request: ExtendedRequest,
+  ) {
+    const userId = request.userId;
+
+    return this.portfolioService.editStock(stock, userId);
+  }
 }

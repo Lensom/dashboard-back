@@ -112,4 +112,20 @@ export class PortfolioService {
       throw new NotFoundException('Portfolio not found');
     }
   }
+
+  async editStock(stock: Portfolio, userId: string): Promise<any> {
+    try {
+      await this.portfolioModel
+        .findOneAndUpdate(
+          { userId, ticker: stock.ticker },
+          { $set: { purchaseHistory: stock.purchaseHistory } },
+          { new: true },
+        )
+        .exec();
+
+      return this.fetchPortfolio(userId);
+    } catch (err) {
+      throw new NotFoundException('Portfolio not found');
+    }
+  }
 }

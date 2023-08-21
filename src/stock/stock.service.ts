@@ -17,8 +17,6 @@ export class StockService {
 
     const url = `https://${baseStockUrl}/stock/v2/get-summary?symbol=${symbol}&region=US`;
 
-    console.log(url);
-
     try {
       const response = await axios.get(url, { headers });
       return response.data;
